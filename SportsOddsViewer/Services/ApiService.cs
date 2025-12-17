@@ -26,6 +26,7 @@ namespace SportsOddsViewer.Services
             _httpClient.DefaultRequestHeaders.Add("accept-language", "vi-VN,vi;q=0.9,fr-FR;q=0.8,fr;q=0.7,en-US;q=0.6,en;q=0.5");
             _httpClient.DefaultRequestHeaders.Add("referer", "https://sports.wwyyuuvv22.com/web-root/restricted/default.aspx");
             _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
+            _httpClient.DefaultRequestHeaders.Add("Cookie", "ASP.NET_SessionId=thj4vns4z2mckcjz5rzaopqc; _hjSessionUser_1325134=eyJpZCI6ImVjMWE4OTkwLTZhMDAtNTNjYi05MmM2LWEwMmE1Njg1YjNiNyIsImNyZWF0ZWQiOjE3NjU5NTQ4MDkwNDUsImV4aXN0aW5nIjp0cnVlfQ==; fullScreenAds=true; favorites%3A10028yy_v86h1831617sbd=[{%22sportType%22:1%2C%22eventIds%22:[9197785%2C9197786%2C9197787%2C9197788%2C9197789%2C9197790%2C9197791%2C9197792%2C9197793%2C9197794]%2C%22leagueIds%22:[]}]; states=:1:1:::1::::::::::1765975484372:1765975484395:1765975484396:1765975484397:1765975484398");
         }
 
         public async Task<List<MatchModel>> FetchMatchesAsync()
@@ -83,8 +84,9 @@ namespace SportsOddsViewer.Services
                         var statusCode = mm.Groups[5].Value;
                         var dateTime = mm.Groups[6].Value;
 
-                        // Chỉ lấy trận KHÔNG phải Live (status code != 6 và != 8)
-                        if (statusCode == "6" || statusCode == "8")
+                        // Chỉ lấy trận CHƯA ĐẤU (status code = 10 = scheduled)
+                        // Bỏ qua Live (6, 8) và đã kết thúc
+                        if (statusCode != "10")
                         {
                             continue;
                         }
@@ -327,10 +329,10 @@ namespace SportsOddsViewer.Services
         {
             return statusCode switch
             {
-                "10" => "Hòa",
-                "6" => "Live",
-                "8" => "Live",
-                "2" => "",
+                "10" => "Sắp đấu",
+                "6" => "TRỰC TIẾP",
+                "8" => "TRỰC TIẾP",
+                "2" => "Kết thúc",
                 _ => ""
             };
         }

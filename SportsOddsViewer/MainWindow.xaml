@@ -19,7 +19,7 @@
             <Setter Property="GridLinesVisibility" Value="All"/>
             <Setter Property="HorizontalGridLinesBrush" Value="#D0D0D0"/>
             <Setter Property="VerticalGridLinesBrush" Value="#D0D0D0"/>
-            <Setter Property="RowHeight" Value="35"/>
+            <Setter Property="RowHeight" Value="45"/>
             <Setter Property="HeadersVisibility" Value="Column"/>
             <Setter Property="AutoGenerateColumns" Value="False"/>
             <Setter Property="CanUserAddRows" Value="False"/>
@@ -139,9 +139,9 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="70"/>   <!-- Thời Gian -->
                         <ColumnDefinition Width="200"/>  <!-- Trận đấu -->
-                        <ColumnDefinition Width="350"/>  <!-- Nguyên trận -->
+                        <ColumnDefinition Width="300"/>  <!-- Nguyên trận: 90+90+120 -->
                         <ColumnDefinition Width="70"/>   <!-- Lẻ/Chẵn -->
-                        <ColumnDefinition Width="250"/>  <!-- Hiệp 1 -->
+                        <ColumnDefinition Width="270"/>  <!-- Hiệp 1: 80+80+110 -->
                         <ColumnDefinition Width="60"/>   <!-- Nhiều -->
                     </Grid.ColumnDefinitions>
                     
@@ -165,12 +165,12 @@
                     <Style TargetType="DataGridColumnHeader">
                         <Setter Property="Background" Value="#5B89E1"/>
                         <Setter Property="Foreground" Value="White"/>
-                        <Setter Property="FontWeight" Value="SemiBold"/>
-                        <Setter Property="FontSize" Value="10"/>
-                        <Setter Property="Height" Value="28"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontSize" Value="11"/>
+                        <Setter Property="Height" Value="32"/>
                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
                         <Setter Property="VerticalContentAlignment" Value="Center"/>
-                        <Setter Property="Padding" Value="2"/>
+                        <Setter Property="Padding" Value="3"/>
                         <Setter Property="BorderBrush" Value="#2E5090"/>
                         <Setter Property="BorderThickness" Value="0,0,1,1"/>
                     </Style>
@@ -181,8 +181,8 @@
                     <DataGridTemplateColumn Header="" Width="70">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock FontSize="11" FontWeight="Bold" HorizontalAlignment="Center">
+                                <StackPanel Orientation="Vertical" Margin="2">
+                                    <TextBlock FontSize="13" FontWeight="Bold" HorizontalAlignment="Center">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Text" Value=""/>
@@ -194,7 +194,7 @@
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
-                                    <TextBlock FontSize="9" Foreground="Red" HorizontalAlignment="Center" Margin="0,2,0,0">
+                                    <TextBlock FontSize="10" FontWeight="Bold" Foreground="Red" HorizontalAlignment="Center" Margin="0,2,0,0">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Text" Value=""/>
@@ -215,8 +215,8 @@
                     <DataGridTemplateColumn Header="" Width="200">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Vertical" Margin="5,2">
-                                    <TextBlock FontSize="8" Foreground="#0066CC" TextWrapping="Wrap">
+                                <StackPanel Orientation="Vertical" Margin="5,3">
+                                    <TextBlock FontSize="9" Foreground="#0066CC" TextWrapping="Wrap" FontWeight="SemiBold">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Text" Value=""/>
@@ -228,7 +228,7 @@
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
-                                    <TextBlock FontWeight="Bold" FontSize="10" Foreground="#CC0000">
+                                    <TextBlock FontWeight="Bold" FontSize="12" Foreground="#CC0000" Margin="0,2,0,0">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Text" Value=""/>
@@ -240,25 +240,13 @@
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
-                                    <TextBlock FontWeight="SemiBold" FontSize="10" Foreground="Black" Margin="0,1,0,0">
+                                    <TextBlock FontWeight="Bold" FontSize="12" Foreground="Black" Margin="0,1,0,0">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Text" Value=""/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsFirstRowOfMatch}" Value="True">
                                                         <Setter Property="Text" Value="{Binding AwayTeam}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <TextBlock FontSize="8" Foreground="Gray" Margin="0,1,0,0">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Text" Value=""/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsFirstRowOfMatch}" Value="True">
-                                                        <Setter Property="Text" Value="Hòa"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -286,13 +274,13 @@
                                     <TextBlock Grid.Row="0" Grid.Column="0"
                                               Text="{Binding FTHDPLine}" 
                                               Foreground="#0066CC" 
-                                              FontSize="9"
+                                              FontSize="10"
                                               FontWeight="Bold"
                                               HorizontalAlignment="Center"/>
                                     <TextBlock Grid.Row="1" Grid.Column="0"
                                               Text="{Binding FTHDPHome}" 
-                                              FontSize="11"
-                                              FontWeight="SemiBold"
+                                              FontSize="12"
+                                              FontWeight="Bold"
                                               HorizontalAlignment="Center">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
@@ -309,8 +297,8 @@
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="" FontSize="9"/>
                                     <TextBlock Grid.Row="1" Grid.Column="1"
                                               Text="{Binding FTHDPAway}" 
-                                              FontSize="11"
-                                              FontWeight="SemiBold"
+                                              FontSize="12"
+                                              FontWeight="Bold"
                                               HorizontalAlignment="Center">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
@@ -345,110 +333,112 @@
                                     <TextBlock Grid.Row="0" Grid.Column="0"
                                               Text="{Binding FTOULine}" 
                                               Foreground="#0066CC" 
-                                              FontSize="9"
+                                              FontSize="10"
                                               FontWeight="Bold"
                                               HorizontalAlignment="Center"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="0"
-                                              Text="{Binding FTOUOver}" 
-                                              FontSize="11"
-                                              FontWeight="SemiBold"
-                                              HorizontalAlignment="Center">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Foreground" Value="Black"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding FTOUOver, Converter={StaticResource NegativeConverter}}" Value="True">
-                                                        <Setter Property="Foreground" Value="Red"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
+                                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="O" FontSize="9" Foreground="Gray" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding FTOUOver}" 
+                                                  FontSize="12"
+                                                  FontWeight="Bold"
+                                                  VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding FTOUOver, Converter={StaticResource NegativeConverter}}" Value="True">
+                                                            <Setter Property="Foreground" Value="Red"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
                                     
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="" FontSize="9"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="1"
-                                              Text="{Binding FTOUUnder}" 
-                                              FontSize="11"
-                                              FontWeight="SemiBold"
-                                              HorizontalAlignment="Center">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Foreground" Value="Black"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding FTOUUnder, Converter={StaticResource NegativeConverter}}" Value="True">
-                                                        <Setter Property="Foreground" Value="Red"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="U" FontSize="9" Foreground="Gray" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding FTOUUnder}" 
+                                                  FontSize="12"
+                                                  FontWeight="Bold"
+                                                  VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding FTOUUnder, Converter={StaticResource NegativeConverter}}" Value="True">
+                                                            <Setter Property="Foreground" Value="Red"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
                     <!-- NGUYÊN TRẬN: 1X2 -->
-                    <DataGridTemplateColumn Header="1X2" Width="90">
+                    <DataGridTemplateColumn Header="1X2" Width="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Grid>
+                                <Grid Margin="2">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30"/>
-                                        <ColumnDefinition Width="30"/>
-                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="1" FontSize="9" Foreground="Gray" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="X" FontSize="9" Foreground="Gray" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="2" FontSize="9" Foreground="Gray" HorizontalAlignment="Center"/>
                                     
                                     <TextBlock Grid.Row="1" Grid.Column="0" 
                                               Text="{Binding FT1X2Home}" 
                                               Foreground="Black" 
-                                              FontSize="10"
-                                              FontWeight="SemiBold"
+                                              FontSize="12"
+                                              FontWeight="Bold"
                                               HorizontalAlignment="Center"/>
                                     <TextBlock Grid.Row="1" Grid.Column="1" 
                                               Text="{Binding FT1X2Draw}" 
                                               Foreground="Black" 
-                                              FontSize="10"
-                                              FontWeight="SemiBold"
+                                              FontSize="12"
+                                              FontWeight="Bold"
                                               HorizontalAlignment="Center"/>
                                     <TextBlock Grid.Row="1" Grid.Column="2" 
                                               Text="{Binding FT1X2Away}" 
                                               Foreground="Black" 
-                                              FontSize="10"
-                                              FontWeight="SemiBold"
+                                              FontSize="12"
+                                              FontWeight="Bold"
                                               HorizontalAlignment="Center"/>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                                    </DataGridTemplateColumn>
 
                     <!-- Lẻ/Chẵn -->
                     <DataGridTemplateColumn Header="Lẻ/Chẵn" Width="70">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    
-                                    <TextBlock Grid.Row="1"
-                                              Text="{Binding OddEvenOdd}" 
+                                <StackPanel Orientation="Vertical" Margin="2">
+                                    <TextBlock Text="{Binding OddEvenOdd}" 
                                               Foreground="Black" 
-                                              FontSize="10"
-                                              FontWeight="SemiBold"
-                                              HorizontalAlignment="Center"/>
-                                    <TextBlock Grid.Row="1"
-                                              Text="{Binding OddEvenEven}" 
-                                              Foreground="Black" 
-                                              FontSize="10"
-                                              FontWeight="SemiBold"
+                                              FontSize="12"
+                                              FontWeight="Bold"
                                               HorizontalAlignment="Center"
-                                              Margin="0,12,0,0"/>
-                                </Grid>
+                                              Margin="0,2,0,0"/>
+                                    <TextBlock Text="{Binding OddEvenEven}" 
+                                              Foreground="Black" 
+                                              FontSize="12"
+                                              FontWeight="Bold"
+                                              HorizontalAlignment="Center"
+                                              Margin="0,4,0,0"/>
+                                </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -470,13 +460,13 @@
                                     <TextBlock Grid.Row="0" Grid.Column="0"
                                               Text="{Binding HTHDPLine}" 
                                               Foreground="#0066CC" 
-                                              FontSize="9"
+                                              FontSize="10"
                                               FontWeight="Bold"
                                               HorizontalAlignment="Center"/>
                                     <TextBlock Grid.Row="1" Grid.Column="0"
                                               Text="{Binding HTHDPHome}" 
-                                              FontSize="11"
-                                              FontWeight="SemiBold"
+                                              FontSize="12"
+                                              FontWeight="Bold"
                                               HorizontalAlignment="Center">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
@@ -493,8 +483,8 @@
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="" FontSize="9"/>
                                     <TextBlock Grid.Row="1" Grid.Column="1"
                                               Text="{Binding HTHDPAway}" 
-                                              FontSize="11"
-                                              FontWeight="SemiBold"
+                                              FontSize="12"
+                                              FontWeight="Bold"
                                               HorizontalAlignment="Center">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
@@ -529,80 +519,89 @@
                                     <TextBlock Grid.Row="0" Grid.Column="0"
                                               Text="{Binding HTOULine}" 
                                               Foreground="#0066CC" 
-                                              FontSize="9"
+                                              FontSize="10"
                                               FontWeight="Bold"
                                               HorizontalAlignment="Center"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="0"
-                                              Text="{Binding HTOUOver}" 
-                                              FontSize="11"
-                                              FontWeight="SemiBold"
-                                              HorizontalAlignment="Center">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Foreground" Value="Black"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding HTOUOver, Converter={StaticResource NegativeConverter}}" Value="True">
-                                                        <Setter Property="Foreground" Value="Red"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
+                                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="O" FontSize="9" Foreground="Gray" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding HTOUOver}" 
+                                                  FontSize="12"
+                                                  FontWeight="Bold"
+                                                  VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding HTOUOver, Converter={StaticResource NegativeConverter}}" Value="True">
+                                                            <Setter Property="Foreground" Value="Red"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
                                     
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="" FontSize="9"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="1"
-                                              Text="{Binding HTOUUnder}" 
-                                              FontSize="11"
-                                              FontWeight="SemiBold"
-                                              HorizontalAlignment="Center">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Foreground" Value="Black"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding HTOUUnder, Converter={StaticResource NegativeConverter}}" Value="True">
-                                                        <Setter Property="Foreground" Value="Red"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="U" FontSize="9" Foreground="Gray" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding HTOUUnder}" 
+                                                  FontSize="12"
+                                                  FontWeight="Bold"
+                                                  VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="Black"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding HTOUUnder, Converter={StaticResource NegativeConverter}}" Value="True">
+                                                            <Setter Property="Foreground" Value="Red"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
                     <!-- HIỆP 1: 1X2 -->
-                    <DataGridTemplateColumn Header="1X2" Width="90">
+                    <DataGridTemplateColumn Header="1X2" Width="110">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Grid>
+                                <Grid Margin="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30"/>
-                                        <ColumnDefinition Width="30"/>
-                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="37"/>
+                                        <ColumnDefinition Width="37"/>
+                                        <ColumnDefinition Width="36"/>
                                     </Grid.ColumnDefinitions>
                                     
-                                    <TextBlock Grid.Column="0" 
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="1" FontSize="9" Foreground="Gray" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="X" FontSize="9" Foreground="Gray" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="2" FontSize="9" Foreground="Gray" HorizontalAlignment="Center"/>
+                                    
+                                    <TextBlock Grid.Row="1" Grid.Column="0" 
                                               Text="{Binding HT1X2Home}" 
                                               Foreground="Black" 
-                                              FontSize="10"
-                                              FontWeight="SemiBold"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Column="1" 
+                                              FontSize="12"
+                                              FontWeight="Bold"
+                                              HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" 
                                               Text="{Binding HT1X2Draw}" 
                                               Foreground="Black" 
-                                              FontSize="10"
-                                              FontWeight="SemiBold"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Column="2" 
+                                              FontSize="12"
+                                              FontWeight="Bold"
+                                              HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" 
                                               Text="{Binding HT1X2Away}" 
                                               Foreground="Black" 
-                                              FontSize="10"
-                                              FontWeight="SemiBold"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
+                                              FontSize="12"
+                                              FontWeight="Bold"
+                                              HorizontalAlignment="Center"/>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
