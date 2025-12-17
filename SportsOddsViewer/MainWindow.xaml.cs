@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
-using SportsOddsViewer.Models;
+using MatchModel = SportsOddsViewer.Models.Match;
 using SportsOddsViewer.Services;
 
 namespace SportsOddsViewer
@@ -12,7 +12,7 @@ namespace SportsOddsViewer
     {
         private readonly ApiService _apiService;
         private readonly DispatcherTimer _timer;
-        private readonly ObservableCollection<Match> _matches;
+        private readonly ObservableCollection<MatchModel> _matches;
         private bool _isUpdating = false;
 
         public MainWindow()
@@ -20,7 +20,7 @@ namespace SportsOddsViewer
             InitializeComponent();
 
             _apiService = new ApiService();
-            _matches = new ObservableCollection<Match>();
+            _matches = new ObservableCollection<MatchModel>();
             MatchesDataGrid.ItemsSource = _matches;
 
             // Setup timer for auto-update every 1 second
@@ -111,7 +111,7 @@ namespace SportsOddsViewer
             }
         }
 
-        private void UpdateMatch(Match existing, Match newData)
+        private void UpdateMatch(MatchModel existing, MatchModel newData)
         {
             // Basic info
             existing.Time = newData.Time;

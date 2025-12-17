@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using SportsOddsViewer.Models;
+using MatchModel = SportsOddsViewer.Models.Match;
 
 namespace SportsOddsViewer.Services
 {
@@ -28,7 +28,7 @@ namespace SportsOddsViewer.Services
             _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36");
         }
 
-        public async Task<List<Match>> FetchMatchesAsync()
+        public async Task<List<MatchModel>> FetchMatchesAsync()
         {
             try
             {
@@ -38,13 +38,13 @@ namespace SportsOddsViewer.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching data: {ex.Message}");
-                return new List<Match>();
+                return new List<MatchModel>();
             }
         }
 
-        private List<Match> ParseResponse(string response)
+        private List<MatchModel> ParseResponse(string response)
         {
-            var matches = new List<Match>();
+            var matches = new List<MatchModel>();
 
             try
             {
@@ -76,7 +76,7 @@ namespace SportsOddsViewer.Services
                     {
                         try
                         {
-                            var match = new Match
+                            var match = new MatchModel
                             {
                                 EventId = int.Parse(m.Groups[1].Value),
                                 LeagueId = int.Parse(m.Groups[2].Value),
@@ -155,7 +155,7 @@ namespace SportsOddsViewer.Services
             return string.Empty;
         }
 
-        private void ParseOddsData(string response, List<Match> matches)
+        private void ParseOddsData(string response, List<MatchModel> matches)
         {
             try
             {
@@ -188,9 +188,10 @@ namespace SportsOddsViewer.Services
                 {
                     try
                     {
-                        var matchStatsId = int.Parse(om.Groups[2].Value);
-                        var betType = int.Parse(om.Groups[3].Value);
-                        var subType = int.Parse(om.Groups[4].Value);
+                        if (!int.TryParse(om.Groups[2].Value, out int matchStatsId)) continue;
+                        if (!int.TryParse(om.Groups[3].Value, out int betType)) continue;
+                        if (!int.TryParse(om.Groups[4].Value, out int subType)) continue;
+                        
                         var handicapStr = om.Groups[5].Value;
                         var oddsStr = om.Groups[6].Value;
                         
@@ -210,7 +211,7 @@ namespace SportsOddsViewer.Services
                         switch (betType)
                         {
                             case 1: // Full Time Handicap
-                                if (oddsValues.Length >= 2)
+                                if (oddsValues != null && oddsValues.Length >= 2)
                                 {
                                     match.FTHDPLine = FormatHandicap(handicap);
                                     match.FTHDPHome = FormatOdds(oddsValues[0]);
@@ -220,7 +221,7 @@ namespace SportsOddsViewer.Services
                                 break;
 
                             case 3: // Full Time Over/Under
-                                if (oddsValues.Length >= 2)
+                                if (oddsValues != null && oddsValues.Length >= 2)
                                 {
                                     match.FTOULine = FormatLine(handicap);
                                     match.FTOUOver = FormatOdds(oddsValues[0]);
@@ -230,7 +231,7 @@ namespace SportsOddsViewer.Services
                                 break;
 
                             case 5: // Full Time 1X2
-                                if (oddsValues.Length >= 3)
+                                if (oddsValues != null && oddsValues.Length >= 3)
                                 {
                                     match.FT1X2Home = FormatOdds(oddsValues[0]);
                                     match.FT1X2Draw = FormatOdds(oddsValues[1]);
@@ -239,7 +240,7 @@ namespace SportsOddsViewer.Services
                                 break;
 
                             case 7: // Half Time Handicap
-                                if (oddsValues.Length >= 2)
+                                if (oddsValues != null && oddsValues.Length >= 2)
                                 {
                                     match.HTHDPLine = FormatHandicap(handicap);
                                     match.HTHDPHome = FormatOdds(oddsValues[0]);
@@ -249,7 +250,7 @@ namespace SportsOddsViewer.Services
                                 break;
 
                             case 9: // Half Time Over/Under
-                                if (oddsValues.Length >= 2)
+                                if (oddsValues != null && oddsValues.Length >= 2)
                                 {
                                     match.HTOULine = FormatLine(handicap);
                                     match.HTOUOver = FormatOdds(oddsValues[0]);
@@ -259,7 +260,7 @@ namespace SportsOddsViewer.Services
                                 break;
 
                             case 8: // Half Time 1X2
-                                if (oddsValues.Length >= 3)
+                                if (oddsValues != null && oddsValues.Length >= 3)
                                 {
                                     match.HT1X2Home = FormatOdds(oddsValues[0]);
                                     match.HT1X2Draw = FormatOdds(oddsValues[1]);
@@ -268,7 +269,7 @@ namespace SportsOddsViewer.Services
                                 break;
 
                             case 12: // Odd/Even
-                                if (oddsValues.Length >= 2)
+                                if (oddsValues != null && oddsValues.Length >= 2)
                                 {
                                     match.OddEvenOdd = FormatOdds(oddsValues[0]);
                                     match.OddEvenEven = FormatOdds(oddsValues[1]);
