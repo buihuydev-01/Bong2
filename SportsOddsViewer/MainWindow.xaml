@@ -11,22 +11,23 @@
     <Window.Resources>
         <!-- Value Converter for Negative Numbers -->
         <local:NegativeValueConverter x:Key="NegativeConverter"/>
+        <local:OddsIndicatorConverter x:Key="OddsIndicatorConverter"/>
         <!-- Style for DataGrid -->
         <Style x:Key="DataGridStyle" TargetType="DataGrid">
-            <Setter Property="Background" Value="#F0F8FF"/>
-            <Setter Property="BorderBrush" Value="#2E5090"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#4169E1"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="GridLinesVisibility" Value="All"/>
-            <Setter Property="HorizontalGridLinesBrush" Value="#D0D0D0"/>
-            <Setter Property="VerticalGridLinesBrush" Value="#D0D0D0"/>
-            <Setter Property="RowHeight" Value="45"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#B8D4F1"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#B8D4F1"/>
+            <Setter Property="RowHeight" Value="50"/>
             <Setter Property="HeadersVisibility" Value="Column"/>
             <Setter Property="AutoGenerateColumns" Value="False"/>
             <Setter Property="CanUserAddRows" Value="False"/>
             <Setter Property="CanUserDeleteRows" Value="False"/>
             <Setter Property="IsReadOnly" Value="True"/>
             <Setter Property="SelectionMode" Value="Single"/>
-            <Setter Property="AlternatingRowBackground" Value="#E8F4FF"/>
+            <Setter Property="AlternatingRowBackground" Value="#E6F2FF"/>
         </Style>
 
         <!-- Style for DataGrid Column Headers -->
@@ -46,9 +47,11 @@
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Padding" Value="5,0"/>
+            <Setter Property="BorderBrush" Value="#B8D4F1"/>
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#FFE87A"/>
+                    <Setter Property="Background" Value="#FFFACD"/>
                     <Setter Property="Foreground" Value="Black"/>
                 </Trigger>
             </Style.Triggers>
@@ -65,10 +68,22 @@
         <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Padding" Value="8,5"/>
+        </Style>
+        
+        <!-- Style for Live Match Row Background -->
+        <Style x:Key="LiveMatchRowStyle" TargetType="DataGridRow">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Status}" Value="TRỰC TIẾP">
+                    <Setter Property="Background" Value="#D4EDDA"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Sắp đấu">
+                    <Setter Property="Background" Value="#E6F2FF"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
@@ -134,7 +149,7 @@
             </Grid.RowDefinitions>
             
             <!-- Custom Header Row 1 (Main Groups) -->
-            <Border Grid.Row="0" Background="#4169E1" BorderBrush="#2E5090" BorderThickness="1">
+            <Border Grid.Row="0" Background="#5B89E1" BorderBrush="#4169E1" BorderThickness="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="70"/>   <!-- Thời Gian -->
@@ -145,12 +160,24 @@
                         <ColumnDefinition Width="60"/>   <!-- Nhiều -->
                     </Grid.ColumnDefinitions>
                     
-                    <TextBlock Grid.Column="0" Text="Thời Gian" Style="{StaticResource HeaderTextStyle}"/>
-                    <TextBlock Grid.Column="1" Text="Trận đấu" Style="{StaticResource HeaderTextStyle}"/>
-                    <TextBlock Grid.Column="2" Text="Nguyên trận" Style="{StaticResource HeaderTextStyle}"/>
-                    <TextBlock Grid.Column="3" Text="Lẻ/Chẵn" Style="{StaticResource HeaderTextStyle}"/>
-                    <TextBlock Grid.Column="4" Text="Hiệp 1" Style="{StaticResource HeaderTextStyle}"/>
-                    <TextBlock Grid.Column="5" Text="Nhiều" Style="{StaticResource HeaderTextStyle}"/>
+                    <Border Grid.Column="0" BorderBrush="#4169E1" BorderThickness="0,0,1,0">
+                        <TextBlock Text="Thời Gian" Style="{StaticResource HeaderTextStyle}"/>
+                    </Border>
+                    <Border Grid.Column="1" BorderBrush="#4169E1" BorderThickness="0,0,1,0">
+                        <TextBlock Text="Trận đấu" Style="{StaticResource HeaderTextStyle}"/>
+                    </Border>
+                    <Border Grid.Column="2" BorderBrush="#4169E1" BorderThickness="0,0,1,0">
+                        <TextBlock Text="Nguyên trận" Style="{StaticResource HeaderTextStyle}"/>
+                    </Border>
+                    <Border Grid.Column="3" BorderBrush="#4169E1" BorderThickness="0,0,1,0">
+                        <TextBlock Text="Lẻ/Chẵn" Style="{StaticResource HeaderTextStyle}"/>
+                    </Border>
+                    <Border Grid.Column="4" BorderBrush="#4169E1" BorderThickness="0,0,1,0">
+                        <TextBlock Text="Hiệp 1" Style="{StaticResource HeaderTextStyle}"/>
+                    </Border>
+                    <Border Grid.Column="5">
+                        <TextBlock Text="Nhiều" Style="{StaticResource HeaderTextStyle}"/>
+                    </Border>
                 </Grid>
             </Border>
             
@@ -159,6 +186,7 @@
                       Grid.Row="1" 
                       Style="{StaticResource DataGridStyle}"
                       CellStyle="{StaticResource CellStyle}"
+                      RowStyle="{StaticResource LiveMatchRowStyle}"
                       ItemsSource="{Binding}">
                 
                 <DataGrid.ColumnHeaderStyle>
@@ -337,11 +365,12 @@
                                               FontWeight="Bold"
                                               HorizontalAlignment="Center"/>
                                     <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock Text="O" FontSize="9" Foreground="Gray" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="O" FontSize="8" Foreground="#888" Margin="0,0,2,0" VerticalAlignment="Center" FontWeight="Bold"/>
                                         <TextBlock Text="{Binding FTOUOver}" 
                                                   FontSize="12"
                                                   FontWeight="Bold"
-                                                  VerticalAlignment="Center">
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,2,0">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Foreground" Value="Black"/>
@@ -353,15 +382,20 @@
                                                 </Style>
                                             </TextBlock.Style>
                                         </TextBlock>
+                                        <TextBlock Text="{Binding FTOUOver, Converter={StaticResource OddsIndicatorConverter}}" 
+                                                  FontSize="8" 
+                                                  Foreground="Orange" 
+                                                  VerticalAlignment="Center"/>
                                     </StackPanel>
                                     
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="" FontSize="9"/>
                                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock Text="U" FontSize="9" Foreground="Gray" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="U" FontSize="8" Foreground="#888" Margin="0,0,2,0" VerticalAlignment="Center" FontWeight="Bold"/>
                                         <TextBlock Text="{Binding FTOUUnder}" 
                                                   FontSize="12"
                                                   FontWeight="Bold"
-                                                  VerticalAlignment="Center">
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,2,0">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Foreground" Value="Black"/>
@@ -373,6 +407,10 @@
                                                 </Style>
                                             </TextBlock.Style>
                                         </TextBlock>
+                                        <TextBlock Text="{Binding FTOUUnder, Converter={StaticResource OddsIndicatorConverter}}" 
+                                                  FontSize="8" 
+                                                  Foreground="Orange" 
+                                                  VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>
@@ -523,11 +561,12 @@
                                               FontWeight="Bold"
                                               HorizontalAlignment="Center"/>
                                     <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock Text="O" FontSize="9" Foreground="Gray" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="O" FontSize="8" Foreground="#888" Margin="0,0,2,0" VerticalAlignment="Center" FontWeight="Bold"/>
                                         <TextBlock Text="{Binding HTOUOver}" 
                                                   FontSize="12"
                                                   FontWeight="Bold"
-                                                  VerticalAlignment="Center">
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,2,0">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Foreground" Value="Black"/>
@@ -539,15 +578,20 @@
                                                 </Style>
                                             </TextBlock.Style>
                                         </TextBlock>
+                                        <TextBlock Text="{Binding HTOUOver, Converter={StaticResource OddsIndicatorConverter}}" 
+                                                  FontSize="8" 
+                                                  Foreground="Orange" 
+                                                  VerticalAlignment="Center"/>
                                     </StackPanel>
                                     
                                     <TextBlock Grid.Row="0" Grid.Column="1" Text="" FontSize="9"/>
                                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock Text="U" FontSize="9" Foreground="Gray" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="U" FontSize="8" Foreground="#888" Margin="0,0,2,0" VerticalAlignment="Center" FontWeight="Bold"/>
                                         <TextBlock Text="{Binding HTOUUnder}" 
                                                   FontSize="12"
                                                   FontWeight="Bold"
-                                                  VerticalAlignment="Center">
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,2,0">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Foreground" Value="Black"/>
@@ -559,6 +603,10 @@
                                                 </Style>
                                             </TextBlock.Style>
                                         </TextBlock>
+                                        <TextBlock Text="{Binding HTOUUnder, Converter={StaticResource OddsIndicatorConverter}}" 
+                                                  FontSize="8" 
+                                                  Foreground="Orange" 
+                                                  VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>

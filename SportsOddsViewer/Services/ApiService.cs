@@ -158,7 +158,8 @@ namespace SportsOddsViewer.Services
                                 AwayTeam = matchInfo.away,
                                 Time = matchInfo.time,
                                 Status = matchInfo.status,
-                                StakeAmount = stake
+                                StakeAmount = stake,
+                                IsLiveMatch = false // Vì đã filter chỉ lấy status = 10
                             };
 
                             if (leaguesDict.TryGetValue(matchInfo.leagueId, out string? leagueName))

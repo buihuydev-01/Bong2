@@ -120,8 +120,39 @@ namespace SportsOddsViewer
             return $"{match.EventId}_{match.StakeAmount:F2}";
         }
 
+        private bool HasMatchChanged(MatchModel existing, MatchModel newData)
+        {
+            // Chỉ check các fields quan trọng để detect thay đổi
+            return existing.FTHDPLine != newData.FTHDPLine ||
+                   existing.FTHDPHome != newData.FTHDPHome ||
+                   existing.FTHDPAway != newData.FTHDPAway ||
+                   existing.FTOULine != newData.FTOULine ||
+                   existing.FTOUOver != newData.FTOUOver ||
+                   existing.FTOUUnder != newData.FTOUUnder ||
+                   existing.FT1X2Home != newData.FT1X2Home ||
+                   existing.FT1X2Draw != newData.FT1X2Draw ||
+                   existing.FT1X2Away != newData.FT1X2Away ||
+                   existing.HTHDPLine != newData.HTHDPLine ||
+                   existing.HTHDPHome != newData.HTHDPHome ||
+                   existing.HTHDPAway != newData.HTHDPAway ||
+                   existing.HTOULine != newData.HTOULine ||
+                   existing.HTOUOver != newData.HTOUOver ||
+                   existing.HTOUUnder != newData.HTOUUnder ||
+                   existing.HT1X2Home != newData.HT1X2Home ||
+                   existing.HT1X2Draw != newData.HT1X2Draw ||
+                   existing.HT1X2Away != newData.HT1X2Away ||
+                   existing.OddEvenOdd != newData.OddEvenOdd ||
+                   existing.OddEvenEven != newData.OddEvenEven;
+        }
+
         private void UpdateMatch(MatchModel existing, MatchModel newData)
         {
+            // CHỈ UPDATE NẾU CÓ THAY ĐỔI - tránh lag
+            if (!HasMatchChanged(existing, newData))
+            {
+                return; // Không có gì thay đổi, skip update
+            }
+
             // Basic info
             existing.Time = newData.Time;
             existing.Status = newData.Status;

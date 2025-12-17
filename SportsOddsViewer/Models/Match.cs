@@ -49,6 +49,7 @@ namespace SportsOddsViewer.Models
         public int MatchStatsId { get; set; }
         public double StakeAmount { get; set; }
         public bool IsFirstRowOfMatch { get; set; }
+        public bool IsLiveMatch { get; set; }
 
         public string Time
         {
