@@ -76,6 +76,15 @@ namespace SportsOddsViewer.Services
                     {
                         try
                         {
+                            var statusCode = m.Groups[5].Value;
+                            
+                            // Chỉ lấy trận KHÔNG phải Live (isLive = false)
+                            // Status code: 6 hoặc 8 = Live, bỏ qua
+                            if (statusCode == "6" || statusCode == "8")
+                            {
+                                continue; // Skip trận Live
+                            }
+                            
                             var match = new MatchModel
                             {
                                 EventId = int.Parse(m.Groups[1].Value),
@@ -83,7 +92,7 @@ namespace SportsOddsViewer.Services
                                 HomeTeam = DecodeString(m.Groups[3].Value),
                                 AwayTeam = DecodeString(m.Groups[4].Value),
                                 Time = ParseDateTime(m.Groups[6].Value),
-                                Status = ParseStatus(m.Groups[5].Value)
+                                Status = ParseStatus(statusCode)
                             };
 
                             if (leaguesDict.TryGetValue(match.LeagueId, out string? leagueName))
