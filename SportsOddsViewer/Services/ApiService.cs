@@ -112,8 +112,8 @@ namespace SportsOddsViewer.Services
             try
             {
                 // Pattern to find odds data arrays
-                // [oddsId,[eventId,betType,subType,...],[odds1,odds2]]
-                var oddsPattern = @"\[\d+,\[(\d+),(\d+),\d+,[^\]]+\],\[([^\]]+)\]\]";
+                // [oddsId,[eventId,betType,subType,handicapValue,...],[odds1,odds2,...]]
+                var oddsPattern = @"\[\d+,\[(\d+),(\d+),(\d+),([^,\]]+),[^\]]*\],\[([^\]]+)\]\]";
                 var oddsMatches = Regex.Matches(response, oddsPattern);
 
                 foreach (Match oddsMatch in oddsMatches)
@@ -122,44 +122,139 @@ namespace SportsOddsViewer.Services
                     {
                         var eventId = int.Parse(oddsMatch.Groups[1].Value);
                         var betType = int.Parse(oddsMatch.Groups[2].Value);
-                        var oddsValues = oddsMatch.Groups[3].Value.Split(',');
+                        var subType = int.Parse(oddsMatch.Groups[3].Value);
+                        var handicapValue = oddsMatch.Groups[4].Value;
+                        var oddsValues = oddsMatch.Groups[5].Value.Split(',');
 
                         var match = matches.FirstOrDefault(m => m.EventId == eventId);
                         if (match == null) continue;
 
+                        // betType: 1=HDP, 3=OU, 5=1X2, 7=HT HDP, 8=HT 1X2, 9=HT OU, 12=Odd/Even
+                        
                         switch (betType)
                         {
-                            case 1: // Handicap (HDP)
+                            case 1: // Full Time Handicap (HDP)
                                 if (oddsValues.Length >= 2)
                                 {
-                                    match.OddsHDPHome = FormatOdds(oddsValues[0]);
-                                    match.OddsHDPAway = FormatOdds(oddsValues[1]);
+                                    var hdpLine = FormatHandicap(handicapValue);
+                                    match.FTHDPLine = hdpLine;
+                                    match.FTHDPHome = FormatOdds(oddsValues[0]);
+                                    match.FTHDPLineAway = FormatHandicapOpposite(handicapValue);
+                                    match.FTHDPAway = FormatOdds(oddsValues[1]);
                                 }
                                 break;
-                            case 3: // Over/Under (OU)
+                                
+                            case 3: // Full Time Over/Under (OU)
                                 if (oddsValues.Length >= 2)
                                 {
-                                    match.OddsOUOver = FormatOdds(oddsValues[0]);
-                                    match.OddsOUUnder = FormatOdds(oddsValues[1]);
+                                    var ouLine = handicapValue;
+                                    match.FTOULine = ouLine;
+                                    match.FTOUOver = FormatOdds(oddsValues[0]);
+                                    match.FTOULineUnder = ouLine;
+                                    match.FTOUUnder = FormatOdds(oddsValues[1]);
                                 }
                                 break;
-                            case 5: // 1X2
+                                
+                            case 5: // Full Time 1X2
                                 if (oddsValues.Length >= 3)
                                 {
-                                    match.Odds1X2Home = FormatOdds(oddsValues[0]);
-                                    match.Odds1X2Draw = FormatOdds(oddsValues[1]);
-                                    match.Odds1X2Away = FormatOdds(oddsValues[2]);
+                                    match.FT1X2Home = FormatOdds(oddsValues[0]);
+                                    match.FT1X2Draw = FormatOdds(oddsValues[1]);
+                                    match.FT1X2Away = FormatOdds(oddsValues[2]);
+                                }
+                                break;
+                                
+                            case 7: // Half Time Handicap (HDP)
+                                if (oddsValues.Length >= 2)
+                                {
+                                    var hdpLine = FormatHandicap(handicapValue);
+                                    match.HTHDPLine = hdpLine;
+                                    match.HTHDPHome = FormatOdds(oddsValues[0]);
+                                    match.HTHDPLineAway = FormatHandicapOpposite(handicapValue);
+                                    match.HTHDPAway = FormatOdds(oddsValues[1]);
+                                }
+                                break;
+                                
+                            case 8: // Half Time 1X2
+                                if (oddsValues.Length >= 3)
+                                {
+                                    match.HT1X2Home = FormatOdds(oddsValues[0]);
+                                    match.HT1X2Draw = FormatOdds(oddsValues[1]);
+                                    match.HT1X2Away = FormatOdds(oddsValues[2]);
+                                }
+                                break;
+                                
+                            case 9: // Half Time Over/Under (OU)
+                                if (oddsValues.Length >= 2)
+                                {
+                                    var ouLine = handicapValue;
+                                    match.HTOULine = ouLine;
+                                    match.HTOUOver = FormatOdds(oddsValues[0]);
+                                    match.HTOULineUnder = ouLine;
+                                    match.HTOUUnder = FormatOdds(oddsValues[1]);
+                                }
+                                break;
+                                
+                            case 12: // Odd/Even
+                                if (oddsValues.Length >= 2)
+                                {
+                                    match.OddEvenOdd = FormatOdds(oddsValues[0]);
+                                    match.OddEvenEven = FormatOdds(oddsValues[1]);
                                 }
                                 break;
                         }
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error parsing individual odds: {ex.Message}");
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error parsing odds: {ex.Message}");
             }
+        }
+
+        private string FormatHandicap(string handicap)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(handicap)) return "";
+                
+                if (double.TryParse(handicap, out double value))
+                {
+                    if (value > 0)
+                        return $"+{value:F2}";
+                    else if (value < 0)
+                        return value.ToString("F2");
+                    else
+                        return "0.00";
+                }
+            }
+            catch { }
+            return handicap;
+        }
+
+        private string FormatHandicapOpposite(string handicap)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(handicap)) return "";
+                
+                if (double.TryParse(handicap, out double value))
+                {
+                    value = -value;
+                    if (value > 0)
+                        return $"+{value:F2}";
+                    else if (value < 0)
+                        return value.ToString("F2");
+                    else
+                        return "0.00";
+                }
+            }
+            catch { }
+            return handicap;
         }
 
         private string FormatOdds(string odds)

@@ -113,21 +113,51 @@ namespace SportsOddsViewer
 
         private void UpdateMatch(Match existing, Match newData)
         {
+            // Basic info
             existing.Time = newData.Time;
             existing.Status = newData.Status;
             existing.HomeTeam = newData.HomeTeam;
             existing.AwayTeam = newData.AwayTeam;
             existing.League = newData.League;
             existing.Score = newData.Score;
-            existing.Odds1X2Home = newData.Odds1X2Home;
-            existing.Odds1X2Draw = newData.Odds1X2Draw;
-            existing.Odds1X2Away = newData.Odds1X2Away;
-            existing.OddsOU = newData.OddsOU;
-            existing.OddsOUOver = newData.OddsOUOver;
-            existing.OddsOUUnder = newData.OddsOUUnder;
-            existing.OddsHDPHome = newData.OddsHDPHome;
-            existing.OddsHDPLine = newData.OddsHDPLine;
-            existing.OddsHDPAway = newData.OddsHDPAway;
+            
+            // Full Time (Nguyên trận) - HDP
+            existing.FTHDPLine = newData.FTHDPLine;
+            existing.FTHDPHome = newData.FTHDPHome;
+            existing.FTHDPLineAway = newData.FTHDPLineAway;
+            existing.FTHDPAway = newData.FTHDPAway;
+            
+            // Full Time - OU
+            existing.FTOULine = newData.FTOULine;
+            existing.FTOUOver = newData.FTOUOver;
+            existing.FTOULineUnder = newData.FTOULineUnder;
+            existing.FTOUUnder = newData.FTOUUnder;
+            
+            // Full Time - 1X2
+            existing.FT1X2Home = newData.FT1X2Home;
+            existing.FT1X2Draw = newData.FT1X2Draw;
+            existing.FT1X2Away = newData.FT1X2Away;
+            
+            // Half Time (Hiệp 1) - HDP
+            existing.HTHDPLine = newData.HTHDPLine;
+            existing.HTHDPHome = newData.HTHDPHome;
+            existing.HTHDPLineAway = newData.HTHDPLineAway;
+            existing.HTHDPAway = newData.HTHDPAway;
+            
+            // Half Time - OU
+            existing.HTOULine = newData.HTOULine;
+            existing.HTOUOver = newData.HTOUOver;
+            existing.HTOULineUnder = newData.HTOULineUnder;
+            existing.HTOUUnder = newData.HTOUUnder;
+            
+            // Half Time - 1X2
+            existing.HT1X2Home = newData.HT1X2Home;
+            existing.HT1X2Draw = newData.HT1X2Draw;
+            existing.HT1X2Away = newData.HT1X2Away;
+            
+            // Odd/Even
+            existing.OddEvenOdd = newData.OddEvenOdd;
+            existing.OddEvenEven = newData.OddEvenEven;
         }
 
         private async void RefreshButton_Click(object sender, RoutedEventArgs e)
