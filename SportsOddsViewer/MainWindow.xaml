@@ -101,6 +101,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
@@ -116,9 +117,25 @@
                                Margin="20,0,0,0" 
                                VerticalAlignment="Center"/>
                 </StackPanel>
+                
+                <!-- Search Box -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
+                    <TextBlock Text="🔍 Tìm đội:" 
+                              Foreground="White" 
+                              FontSize="12" 
+                              Margin="0,0,8,0"
+                              VerticalAlignment="Center"/>
+                    <TextBox x:Name="SearchTextBox"
+                            Width="200"
+                            Height="30"
+                            FontSize="12"
+                            Padding="5"
+                            VerticalContentAlignment="Center"
+                            TextChanged="SearchTextBox_TextChanged"/>
+                </StackPanel>
 
                 <Button x:Name="RefreshButton" 
-                        Grid.Column="1"
+                        Grid.Column="2"
                         Content="🔄 Làm mới ngay" 
                         Background="#32CD32" 
                         Foreground="White" 
@@ -129,7 +146,7 @@
                         Cursor="Hand"/>
 
                 <ToggleButton x:Name="AutoUpdateToggle" 
-                              Grid.Column="2"
+                              Grid.Column="3"
                               Content="⏸ Tạm dừng" 
                               IsChecked="True"
                               Background="#FF6347" 
@@ -244,7 +261,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical" Margin="5,3">
-                                    <TextBlock FontSize="9" Foreground="#0066CC" TextWrapping="Wrap" FontWeight="SemiBold">
+                                    <TextBlock FontSize="9" Foreground="#0066CC" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,0,0,2">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Text" Value=""/>
@@ -256,25 +273,23 @@
                                             </Style>
                                         </TextBlock.Style>
                                     </TextBlock>
-                                    <TextBlock FontWeight="Bold" FontSize="12" Foreground="#CC0000" Margin="0,2,0,0">
+                                    
+                                    <!-- Home - Away trên cùng 1 dòng -->
+                                    <TextBlock FontWeight="Bold" FontSize="12" TextWrapping="Wrap">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Setter Property="Text" Value=""/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsFirstRowOfMatch}" Value="True">
-                                                        <Setter Property="Text" Value="{Binding HomeTeam}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <TextBlock FontWeight="Bold" FontSize="12" Foreground="Black" Margin="0,1,0,0">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Text" Value=""/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsFirstRowOfMatch}" Value="True">
-                                                        <Setter Property="Text" Value="{Binding AwayTeam}"/>
+                                                        <Setter Property="Text">
+                                                            <Setter.Value>
+                                                                <MultiBinding StringFormat="{}{0} - {1}">
+                                                                    <Binding Path="HomeTeam"/>
+                                                                    <Binding Path="AwayTeam"/>
+                                                                </MultiBinding>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Setter Property="Foreground" Value="Black"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>

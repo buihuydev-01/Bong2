@@ -15,6 +15,12 @@ A WPF application that displays football betting odds in real-time with **multi-
 - Dòng đầu tiên hiển thị đầy đủ thông tin trận (thời gian, đội, giải đấu, trạng thái)
 - Các dòng tiếp theo chỉ hiển thị tỷ lệ cược
 
+### 🔍 Search & Filter (New in v2.3!)
+- **Tìm kiếm trận đấu theo tên đội** - Gõ tên đội để tìm nhanh
+- Real-time search (không cần nhấn Enter)
+- Không phân biệt HOA/thường
+- Tìm theo Home hoặc Away team
+
 ### 📊 Odds Coverage
 - **Full Time (Nguyên trận)**: Cược chấp (HDP), Tài/Xỉu (O/U), 1X2
 - **Half Time (Hiệp 1)**: Cược chấp (HDP), Tài/Xỉu (O/U), 1X2
@@ -29,6 +35,7 @@ A WPF application that displays football betting odds in real-time with **multi-
 ### 🎨 UI Features
 - ✅ Header 2 tầng (Main groups + Sub-headers)
 - ✅ Số đỏ cho odds âm, số đen cho odds dương
+- ✅ **Compact layout**: Home - Away trên cùng 1 dòng (v2.3)
 - ✅ Responsive layout
 - ✅ Color-coded cells
 - ✅ Hiển thị số trận và tổng số dòng
@@ -218,6 +225,7 @@ API Response (JavaScript string)
 - [API_PARSE_GUIDE.md](API_PARSE_GUIDE.md) - **Hướng dẫn chi tiết parse API response**
 - [CHANGELOG.md](CHANGELOG.md) - Lịch sử phiên bản và thay đổi
 - [VISUAL_STUDIO_GUIDE.md](VISUAL_STUDIO_GUIDE.md) - Hướng dẫn build với Visual Studio
+- [SEARCH_AND_LAYOUT_UPDATE_V2.3.md](SEARCH_AND_LAYOUT_UPDATE_V2.3.md) - **Update v2.3: Search & Compact Layout**
 
 ---
 
@@ -265,6 +273,7 @@ API Response (JavaScript string)
 3. Dữ liệu cập nhật mỗi 1 giây
 
 ### Điều khiển
+- **🔍 Tìm đội**: Gõ tên đội để tìm kiếm (v2.3)
 - **▶ Tiếp tục / ⏸ Tạm dừng**: Toggle auto-update
 - **🔄 Làm mới**: Manual refresh
 - Đóng cửa sổ để thoát
@@ -371,6 +380,6 @@ Có câu hỏi? Tạo issue trên GitHub hoặc xem tài liệu chi tiết trong
 
 ---
 
-**Version**: 2.0  
+**Version**: 2.3  
 **Last Updated**: December 2025  
 **Author**: Sports Odds Viewer Team

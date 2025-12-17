@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Threading;
 using MatchModel = SportsOddsViewer.Models.Match;
 using SportsOddsViewer.Services;
@@ -14,7 +15,9 @@ namespace SportsOddsViewer
         private readonly ApiService _apiService;
         private readonly DispatcherTimer _timer;
         private readonly ObservableCollection<MatchModel> _matches;
+        private readonly CollectionViewSource _matchesViewSource;
         private bool _isUpdating = false;
+        private string _searchText = "";
 
         public MainWindow()
         {
@@ -22,7 +25,11 @@ namespace SportsOddsViewer
 
             _apiService = new ApiService();
             _matches = new ObservableCollection<MatchModel>();
-            MatchesDataGrid.ItemsSource = _matches;
+            
+            // Setup CollectionViewSource for filtering
+            _matchesViewSource = new CollectionViewSource { Source = _matches };
+            _matchesViewSource.Filter += MatchesViewSource_Filter;
+            MatchesDataGrid.ItemsSource = _matchesViewSource.View;
 
             // Setup timer for auto-update every 1 second
             _timer = new DispatcherTimer
@@ -216,6 +223,33 @@ namespace SportsOddsViewer
                 AutoUpdateToggle.Background = System.Windows.Media.Brushes.Green;
                 StatusText.Text = "Tự động cập nhật: TẮT";
             }
+        }
+
+        private void MatchesViewSource_Filter(object sender, FilterEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(_searchText))
+            {
+                e.Accepted = true;
+                return;
+            }
+
+            var match = e.Item as MatchModel;
+            if (match == null)
+            {
+                e.Accepted = false;
+                return;
+            }
+
+            // Tìm kiếm theo tên đội (không phân biệt hoa/thường)
+            var searchLower = _searchText.ToLower();
+            e.Accepted = match.HomeTeam.ToLower().Contains(searchLower) ||
+                        match.AwayTeam.ToLower().Contains(searchLower);
+        }
+
+        private void SearchTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            _searchText = SearchTextBox.Text ?? "";
+            _matchesViewSource.View.Refresh(); // Refresh filter
         }
 
         protected override void OnClosed(EventArgs e)
