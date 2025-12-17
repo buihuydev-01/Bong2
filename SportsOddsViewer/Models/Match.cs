@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 
 namespace SportsOddsViewer.Models
@@ -10,17 +9,15 @@ namespace SportsOddsViewer.Models
         private string _homeTeam = string.Empty;
         private string _awayTeam = string.Empty;
         private string _league = string.Empty;
-        private string _score = string.Empty;
+        
         // Full Time (Nguyên trận) - HDP
         private string _ftHDPLine = string.Empty;
         private string _ftHDPHome = string.Empty;
-        private string _ftHDPLineAway = string.Empty;
         private string _ftHDPAway = string.Empty;
         
         // Full Time - OU
         private string _ftOULine = string.Empty;
         private string _ftOUOver = string.Empty;
-        private string _ftOULineUnder = string.Empty;
         private string _ftOUUnder = string.Empty;
         
         // Full Time - 1X2
@@ -28,29 +25,30 @@ namespace SportsOddsViewer.Models
         private string _ft1X2Draw = string.Empty;
         private string _ft1X2Away = string.Empty;
         
+        // Odd/Even (Lẻ/Chẵn)
+        private string _oddEvenOdd = string.Empty;
+        private string _oddEvenEven = string.Empty;
+        
         // Half Time (Hiệp 1) - HDP
         private string _htHDPLine = string.Empty;
         private string _htHDPHome = string.Empty;
-        private string _htHDPLineAway = string.Empty;
         private string _htHDPAway = string.Empty;
         
         // Half Time - OU
         private string _htOULine = string.Empty;
         private string _htOUOver = string.Empty;
-        private string _htOULineUnder = string.Empty;
         private string _htOUUnder = string.Empty;
         
         // Half Time - 1X2
         private string _ht1X2Home = string.Empty;
         private string _ht1X2Draw = string.Empty;
         private string _ht1X2Away = string.Empty;
-        
-        // Odd/Even (Lẻ/Chẵn)
-        private string _oddEvenOdd = string.Empty;
-        private string _oddEvenEven = string.Empty;
 
         public int EventId { get; set; }
         public int LeagueId { get; set; }
+        public int MatchStatsId { get; set; }
+        public double StakeAmount { get; set; }
+        public bool IsFirstRowOfMatch { get; set; }
 
         public string Time
         {
@@ -82,13 +80,7 @@ namespace SportsOddsViewer.Models
             set { _league = value; OnPropertyChanged(nameof(League)); }
         }
 
-        public string Score
-        {
-            get => _score;
-            set { _score = value; OnPropertyChanged(nameof(Score)); }
-        }
-
-        // Full Time (Nguyên trận) Properties
+        // Full Time Properties
         public string FTHDPLine
         {
             get => _ftHDPLine;
@@ -99,12 +91,6 @@ namespace SportsOddsViewer.Models
         {
             get => _ftHDPHome;
             set { _ftHDPHome = value; OnPropertyChanged(nameof(FTHDPHome)); }
-        }
-
-        public string FTHDPLineAway
-        {
-            get => _ftHDPLineAway;
-            set { _ftHDPLineAway = value; OnPropertyChanged(nameof(FTHDPLineAway)); }
         }
 
         public string FTHDPAway
@@ -123,12 +109,6 @@ namespace SportsOddsViewer.Models
         {
             get => _ftOUOver;
             set { _ftOUOver = value; OnPropertyChanged(nameof(FTOUOver)); }
-        }
-
-        public string FTOULineUnder
-        {
-            get => _ftOULineUnder;
-            set { _ftOULineUnder = value; OnPropertyChanged(nameof(FTOULineUnder)); }
         }
 
         public string FTOUUnder
@@ -155,7 +135,20 @@ namespace SportsOddsViewer.Models
             set { _ft1X2Away = value; OnPropertyChanged(nameof(FT1X2Away)); }
         }
 
-        // Half Time (Hiệp 1) Properties
+        // Odd/Even Properties
+        public string OddEvenOdd
+        {
+            get => _oddEvenOdd;
+            set { _oddEvenOdd = value; OnPropertyChanged(nameof(OddEvenOdd)); }
+        }
+
+        public string OddEvenEven
+        {
+            get => _oddEvenEven;
+            set { _oddEvenEven = value; OnPropertyChanged(nameof(OddEvenEven)); }
+        }
+
+        // Half Time Properties
         public string HTHDPLine
         {
             get => _htHDPLine;
@@ -166,12 +159,6 @@ namespace SportsOddsViewer.Models
         {
             get => _htHDPHome;
             set { _htHDPHome = value; OnPropertyChanged(nameof(HTHDPHome)); }
-        }
-
-        public string HTHDPLineAway
-        {
-            get => _htHDPLineAway;
-            set { _htHDPLineAway = value; OnPropertyChanged(nameof(HTHDPLineAway)); }
         }
 
         public string HTHDPAway
@@ -190,12 +177,6 @@ namespace SportsOddsViewer.Models
         {
             get => _htOUOver;
             set { _htOUOver = value; OnPropertyChanged(nameof(HTOUOver)); }
-        }
-
-        public string HTOULineUnder
-        {
-            get => _htOULineUnder;
-            set { _htOULineUnder = value; OnPropertyChanged(nameof(HTOULineUnder)); }
         }
 
         public string HTOUUnder
@@ -220,19 +201,6 @@ namespace SportsOddsViewer.Models
         {
             get => _ht1X2Away;
             set { _ht1X2Away = value; OnPropertyChanged(nameof(HT1X2Away)); }
-        }
-
-        // Odd/Even Properties
-        public string OddEvenOdd
-        {
-            get => _oddEvenOdd;
-            set { _oddEvenOdd = value; OnPropertyChanged(nameof(OddEvenOdd)); }
-        }
-
-        public string OddEvenEven
-        {
-            get => _oddEvenEven;
-            set { _oddEvenEven = value; OnPropertyChanged(nameof(OddEvenEven)); }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

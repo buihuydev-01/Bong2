@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -56,44 +57,47 @@ namespace SportsOddsViewer
 
                 if (newMatches.Count > 0)
                 {
-                    // Update existing matches or add new ones
-                    foreach (var newMatch in newMatches)
+                    // Build a dictionary of new matches by key (eventId_stake)
+                    var newMatchDict = new Dictionary<string, MatchModel>();
+                    foreach (var m in newMatches)
                     {
-                        var existingMatch = _matches.FirstOrDefault(m => m.EventId == newMatch.EventId);
-                        
-                        if (existingMatch != null)
-                        {
-                            // Update existing match
-                            UpdateMatch(existingMatch, newMatch);
-                        }
-                        else
-                        {
-                            // Add new match
-                            _matches.Add(newMatch);
-                        }
+                        newMatchDict[GetMatchKey(m)] = m;
                     }
-
+                    
                     // Remove matches that are no longer in the API response
                     var matchesToRemove = _matches
-                        .Where(m => !newMatches.Any(nm => nm.EventId == m.EventId))
+                        .Where(m => !newMatchDict.ContainsKey(GetMatchKey(m)))
                         .ToList();
 
                     foreach (var match in matchesToRemove)
                     {
                         _matches.Remove(match);
                     }
-
-                    // Sort by time
-                    var sortedMatches = _matches.OrderBy(m => m.Time).ToList();
-                    _matches.Clear();
-                    foreach (var match in sortedMatches)
+                    
+                    // Update existing matches
+                    foreach (var existing in _matches.ToList())
                     {
-                        _matches.Add(match);
+                        var key = GetMatchKey(existing);
+                        if (newMatchDict.TryGetValue(key, out var newMatch))
+                        {
+                            UpdateMatch(existing, newMatch);
+                            newMatchDict.Remove(key); // Mark as processed
+                        }
+                    }
+                    
+                    // Add new matches (ones not yet in _matches)
+                    foreach (var newMatch in newMatchDict.Values)
+                    {
+                        _matches.Add(newMatch);
                     }
 
                     LastUpdateText.Text = $"Cập nhật lúc: {DateTime.Now:HH:mm:ss}";
                     StatusText.Text = "✓ Kết nối thành công";
-                    MatchCountText.Text = $"Số trận: {_matches.Count}";
+                    
+                    // Count unique matches (by EventId)
+                    var uniqueMatches = _matches.Select(m => m.EventId).Distinct().Count();
+                    var totalRows = _matches.Count;
+                    MatchCountText.Text = $"Số trận: {uniqueMatches} ({totalRows} dòng)";
                 }
                 else
                 {
@@ -111,6 +115,11 @@ namespace SportsOddsViewer
             }
         }
 
+        private string GetMatchKey(MatchModel match)
+        {
+            return $"{match.EventId}_{match.StakeAmount:F2}";
+        }
+
         private void UpdateMatch(MatchModel existing, MatchModel newData)
         {
             // Basic info
@@ -119,18 +128,17 @@ namespace SportsOddsViewer
             existing.HomeTeam = newData.HomeTeam;
             existing.AwayTeam = newData.AwayTeam;
             existing.League = newData.League;
-            existing.Score = newData.Score;
+            existing.IsFirstRowOfMatch = newData.IsFirstRowOfMatch;
+            existing.StakeAmount = newData.StakeAmount;
             
             // Full Time (Nguyên trận) - HDP
             existing.FTHDPLine = newData.FTHDPLine;
             existing.FTHDPHome = newData.FTHDPHome;
-            existing.FTHDPLineAway = newData.FTHDPLineAway;
             existing.FTHDPAway = newData.FTHDPAway;
             
             // Full Time - OU
             existing.FTOULine = newData.FTOULine;
             existing.FTOUOver = newData.FTOUOver;
-            existing.FTOULineUnder = newData.FTOULineUnder;
             existing.FTOUUnder = newData.FTOUUnder;
             
             // Full Time - 1X2
@@ -141,13 +149,11 @@ namespace SportsOddsViewer
             // Half Time (Hiệp 1) - HDP
             existing.HTHDPLine = newData.HTHDPLine;
             existing.HTHDPHome = newData.HTHDPHome;
-            existing.HTHDPLineAway = newData.HTHDPLineAway;
             existing.HTHDPAway = newData.HTHDPAway;
             
             // Half Time - OU
             existing.HTOULine = newData.HTOULine;
             existing.HTOUOver = newData.HTOUOver;
-            existing.HTOULineUnder = newData.HTOULineUnder;
             existing.HTOUUnder = newData.HTOUUnder;
             
             // Half Time - 1X2
