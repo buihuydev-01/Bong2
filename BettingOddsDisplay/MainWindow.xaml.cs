@@ -12,14 +12,14 @@ namespace BettingOddsDisplay
     public partial class MainWindow : Window
     {
         private readonly OddsDataService _dataService;
-        private ObservableCollection<LeagueViewModel> _leagues;
+        private ObservableCollection<Models.Match> _matches;
 
         public MainWindow()
         {
             InitializeComponent();
             
-            _leagues = new ObservableCollection<LeagueViewModel>();
-            LeaguesItemsControl.ItemsSource = _leagues;
+            _matches = new ObservableCollection<Models.Match>();
+            MatchesItemsControl.ItemsSource = _matches;
             
             _dataService = new OddsDataService();
             _dataService.DataUpdated += OnDataUpdated;
@@ -109,33 +109,14 @@ namespace BettingOddsDisplay
 
         private void UpdateLeagueData(BettingData data)
         {
-            // Group matches by league
-            var matchesByLeague = data.Matches
-                .GroupBy(m => m.LeagueId)
-                .ToDictionary(g => g.Key, g => g.ToList());
+            Console.WriteLine($"[UI] Clearing {_matches.Count} old matches");
+            _matches.Clear();
 
-            // Clear existing leagues
-            _leagues.Clear();
-
-            // Add leagues with their matches
-            foreach (var league in data.Leagues)
+            Console.WriteLine($"[UI] Adding {data.Matches.Count} new matches");
+            foreach (var match in data.Matches)
             {
-                if (matchesByLeague.TryGetValue(league.LeagueId, out var matches))
-                {
-                    var leagueVM = new LeagueViewModel
-                    {
-                        Name = league.Name,
-                        SubLeague = league.SubLeague,
-                        MatchInfo = league.MatchInfo
-                    };
-
-                    foreach (var match in matches)
-                    {
-                        leagueVM.Matches.Add(match);
-                    }
-
-                    _leagues.Add(leagueVM);
-                }
+                Console.WriteLine($"[UI]   - {match.HomeTeam} vs {match.AwayTeam}, Odds groups: {match.OddsGroups.Count}");
+                _matches.Add(match);
             }
         }
 

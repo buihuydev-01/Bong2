@@ -58,8 +58,8 @@ namespace BettingOddsDisplay.Services
             // Fetch immediately
             _ = FetchDataAsync();
             
-            // Then fetch every 1 second
-            _timer = new Timer(async _ => await FetchDataAsync(), null, 1000, 1000);
+            // Then fetch every 2 seconds (slower to avoid blocking)
+            _timer = new Timer(async _ => await FetchDataAsync(), null, 2000, 2000);
         }
 
         public void Stop()
