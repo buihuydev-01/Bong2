@@ -32,7 +32,42 @@ namespace BettingOddsDisplay
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             StatusText.Text = "Đang kết nối...";
+            Console.WriteLine("=== Betting Odds Display Started ===");
+            Console.WriteLine($"Time: {DateTime.Now}");
+            
+            // Test with sample data first
+            TestWithSampleData();
+            
+            // Then start real service
             _dataService.Start();
+        }
+        
+        private void TestWithSampleData()
+        {
+            try
+            {
+                var sampleFile = "sample_response.txt";
+                if (System.IO.File.Exists(sampleFile))
+                {
+                    Console.WriteLine("[TEST] Loading sample data...");
+                    var response = System.IO.File.ReadAllText(sampleFile);
+                    var parser = new Services.ResponseParser();
+                    var data = parser.ParseResponse(response);
+                    
+                    Console.WriteLine($"[TEST] Sample data parsed: {data.Leagues.Count} leagues, {data.Matches.Count} matches");
+                    
+                    // Display sample data
+                    OnDataUpdated(data);
+                }
+                else
+                {
+                    Console.WriteLine("[TEST] sample_response.txt not found, skipping test");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[TEST] Error: {ex.Message}");
+            }
         }
 
         private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
@@ -47,14 +82,18 @@ namespace BettingOddsDisplay
             {
                 try
                 {
+                    Console.WriteLine($"[UI] Updating UI with {data.Matches.Count} matches");
                     UpdateTimeText.Text = data.UpdateTime;
                     StatusText.Text = $"Đã tải {data.Matches.Count} trận đấu từ {data.Leagues.Count} giải đấu";
                     
                     UpdateLeagueData(data);
+                    Console.WriteLine($"[UI] UI updated successfully");
                 }
                 catch (Exception ex)
                 {
                     StatusText.Text = $"Lỗi cập nhật UI: {ex.Message}";
+                    Console.WriteLine($"[UI] Error: {ex.Message}");
+                    Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 }
             });
         }
@@ -96,6 +135,7 @@ namespace BettingOddsDisplay
             Dispatcher.Invoke(() =>
             {
                 StatusText.Text = error;
+                Console.WriteLine($"[ERROR] {error}");
             });
         }
     }

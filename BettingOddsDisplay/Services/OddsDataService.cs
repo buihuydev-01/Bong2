@@ -76,15 +76,26 @@ namespace BettingOddsDisplay.Services
             try
             {
                 var url = "https://sports.wwyyuuvv22.com/web-root/restricted/odds-display/today-data.aspx?od-param=2,1,1,1,1,2,1,2,0&fi=1&v=131885&dl=0";
+                
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Fetching data from API...");
                 var response = await _httpClient.GetStringAsync(url);
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Response length: {response.Length} chars");
                 
                 var data = _parser.ParseResponse(response);
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Parsed: {data.Leagues.Count} leagues, {data.Matches.Count} matches");
                 
                 DataUpdated?.Invoke(data);
             }
+            catch (HttpRequestException ex)
+            {
+                ErrorOccurred?.Invoke($"Network error: {ex.Message}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Network error: {ex.Message}");
+            }
             catch (Exception ex)
             {
-                ErrorOccurred?.Invoke($"Error fetching data: {ex.Message}");
+                ErrorOccurred?.Invoke($"Error: {ex.Message}");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
             }
         }
 
