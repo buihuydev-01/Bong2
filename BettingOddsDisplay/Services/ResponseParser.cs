@@ -16,26 +16,44 @@ namespace BettingOddsDisplay.Services
             
             try
             {
+                Console.WriteLine($"[Parser] Response length: {response.Length}");
+                Console.WriteLine($"[Parser] First 200 chars: {response.Substring(0, Math.Min(200, response.Length))}");
+                
                 // Extract JSON array from JavaScript function call
                 // Pattern: $M('odds-display').onUpdate(2,[...]);
-                var regexMatch = Regex.Match(response, @"\$M\('odds-display'\)\.onUpdate\(2,(\[.+\])\);?", RegexOptions.Singleline);
+                var regexMatch = Regex.Match(response, @"\$M\('odds-display'\)\.onUpdate\(2,(\[.+\])\)", RegexOptions.Singleline);
                 
                 if (!regexMatch.Success)
+                {
+                    Console.WriteLine("[Parser] ERROR: Regex did not match!");
+                    Console.WriteLine("[Parser] Looking for pattern: $M('odds-display').onUpdate(2,[...])");
                     return data;
+                }
 
+                Console.WriteLine("[Parser] Regex matched successfully");
                 var jsonString = regexMatch.Groups[1].Value;
+                Console.WriteLine($"[Parser] JSON string length: {jsonString.Length}");
+                Console.WriteLine($"[Parser] JSON first 200 chars: {jsonString.Substring(0, Math.Min(200, jsonString.Length))}");
+                
                 var rootArray = JArray.Parse(jsonString);
+                Console.WriteLine($"[Parser] Root array parsed, count: {rootArray.Count}");
 
                 if (rootArray.Count < 7)
+                {
+                    Console.WriteLine($"[Parser] ERROR: Root array too short, count={rootArray.Count}, expected >= 7");
                     return data;
+                }
 
+                Console.WriteLine("[Parser] Parsing leagues at index 3...");
                 // Parse leagues [index 3]
                 var leaguesArray = rootArray[3] as JArray;
                 if (leaguesArray != null && leaguesArray.Count > 0)
                 {
+                    Console.WriteLine($"[Parser] Leagues array found, count: {leaguesArray.Count}");
                     var leaguesList = leaguesArray[0] as JArray;
                     if (leaguesList != null)
                     {
+                        Console.WriteLine($"[Parser] Leagues list found, count: {leaguesList.Count}");
                         foreach (var league in leaguesList)
                         {
                             var leagueArray = league as JArray;
@@ -52,14 +70,23 @@ namespace BettingOddsDisplay.Services
                         }
                     }
                 }
+                else
+                {
+                    Console.WriteLine("[Parser] WARNING: No leagues array found at index 3");
+                }
 
+                Console.WriteLine($"[Parser] Total leagues parsed: {data.Leagues.Count}");
+                Console.WriteLine("[Parser] Parsing matches at index 4...");
+                
                 // Parse matches [index 4]
                 var matchesArray = rootArray[4] as JArray;
                 if (matchesArray != null && matchesArray.Count > 0)
                 {
+                    Console.WriteLine($"[Parser] Matches array found, count: {matchesArray.Count}");
                     var matchesList = matchesArray[0] as JArray;
                     if (matchesList != null)
                     {
+                        Console.WriteLine($"[Parser] Matches list found, count: {matchesList.Count}");
                         foreach (var matchToken in matchesList)
                         {
                             var matchArray = matchToken as JArray;
@@ -85,7 +112,14 @@ namespace BettingOddsDisplay.Services
                         }
                     }
                 }
+                else
+                {
+                    Console.WriteLine("[Parser] WARNING: No matches array found at index 4");
+                }
 
+                Console.WriteLine($"[Parser] Total matches parsed: {data.Matches.Count}");
+                Console.WriteLine("[Parser] Parsing markets at index 5...");
+                
                 // Parse markets [index 5]
                 var marketsArray = rootArray[5] as JArray;
                 if (marketsArray != null && marketsArray.Count > 0)
@@ -110,7 +144,13 @@ namespace BettingOddsDisplay.Services
                         }
                     }
                 }
+                else
+                {
+                    Console.WriteLine("[Parser] WARNING: No markets array found at index 5");
+                }
 
+                Console.WriteLine("[Parser] Parsing odds at index 6...");
+                
                 // Parse odds [index 6]
                 var oddsArray = rootArray[6] as JArray;
                 if (oddsArray != null && oddsArray.Count > 0)
@@ -179,7 +219,13 @@ namespace BettingOddsDisplay.Services
                         }
                     }
                 }
+                else
+                {
+                    Console.WriteLine("[Parser] WARNING: No odds array found at index 6");
+                }
 
+                Console.WriteLine("[Parser] Sorting odds lines...");
+                
                 // Sort odds lines by priority
                 foreach (var match in data.Matches)
                 {
@@ -190,10 +236,19 @@ namespace BettingOddsDisplay.Services
                 }
 
                 data.UpdateTime = DateTime.Now.ToString("HH:mm:ss");
+                
+                Console.WriteLine($"[Parser] ✅ Parse completed successfully!");
+                Console.WriteLine($"[Parser] Final result: {data.Leagues.Count} leagues, {data.Matches.Count} matches");
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"[Parser] ❌ JSON Parse error: {ex.Message}");
+                Console.WriteLine($"[Parser] Stack trace: {ex.StackTrace}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Parse error: {ex.Message}");
+                Console.WriteLine($"[Parser] ❌ Parse error: {ex.Message}");
+                Console.WriteLine($"[Parser] Stack trace: {ex.StackTrace}");
             }
 
             return data;
