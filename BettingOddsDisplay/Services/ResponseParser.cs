@@ -18,12 +18,12 @@ namespace BettingOddsDisplay.Services
             {
                 // Extract JSON array from JavaScript function call
                 // Pattern: $M('odds-display').onUpdate(2,[...]);
-                var match = Regex.Match(response, @"\$M\('odds-display'\)\.onUpdate\(2,(\[.+\])\);?", RegexOptions.Singleline);
+                var regexMatch = Regex.Match(response, @"\$M\('odds-display'\)\.onUpdate\(2,(\[.+\])\);?", RegexOptions.Singleline);
                 
-                if (!match.Success)
+                if (!regexMatch.Success)
                     return data;
 
-                var jsonString = match.Groups[1].Value;
+                var jsonString = regexMatch.Groups[1].Value;
                 var rootArray = JArray.Parse(jsonString);
 
                 if (rootArray.Count < 7)
@@ -60,12 +60,12 @@ namespace BettingOddsDisplay.Services
                     var matchesList = matchesArray[0] as JArray;
                     if (matchesList != null)
                     {
-                        foreach (var match in matchesList)
+                        foreach (var matchToken in matchesList)
                         {
-                            var matchArray = match as JArray;
+                            var matchArray = matchToken as JArray;
                             if (matchArray != null && matchArray.Count >= 12)
                             {
-                                var matchObj = new Match
+                                var matchObj = new Models.Match
                                 {
                                     MatchId = matchArray[0].Value<long>(),
                                     SportType = matchArray[1].Value<int>(),
@@ -93,9 +93,9 @@ namespace BettingOddsDisplay.Services
                     var marketsList = marketsArray[0] as JArray;
                     if (marketsList != null)
                     {
-                        foreach (var market in marketsList)
+                        foreach (var marketToken in marketsList)
                         {
-                            var marketArray = market as JArray;
+                            var marketArray = marketToken as JArray;
                             if (marketArray != null && marketArray.Count >= 2)
                             {
                                 long marketId = marketArray[0].Value<long>();
@@ -118,9 +118,9 @@ namespace BettingOddsDisplay.Services
                     var oddsList = oddsArray[0] as JArray;
                     if (oddsList != null)
                     {
-                        foreach (var odds in oddsList)
+                        foreach (var oddsToken in oddsList)
                         {
-                            var oddsArr = odds as JArray;
+                            var oddsArr = oddsToken as JArray;
                             if (oddsArr != null && oddsArr.Count >= 3)
                             {
                                 long oddsId = oddsArr[0].Value<long>();
